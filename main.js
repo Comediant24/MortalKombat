@@ -10,6 +10,8 @@ const player1 = {
   attack: function () {
     console.log(`${this.name} + fight`);
   },
+  changeHP: changeHP,
+  renderHP: renderHP,
 };
 
 const player2 = {
@@ -21,6 +23,8 @@ const player2 = {
   attack: function () {
     console.log(`${this.name} + fight`);
   },
+  changeHP: changeHP,
+  renderHP: renderHP,
 };
 
 function randomDamage(upperLimit) {
@@ -64,13 +68,20 @@ function createPlayer(playerConfig) {
 arenas.appendChild(createPlayer(player1));
 arenas.appendChild(createPlayer(player2));
 
-function changeHP(player) {
-  const playerLife = document.querySelector(`.player${player.player} .life`);
-  player.hp -= randomDamage(20);
-  if (player.hp < 0) {
-    player.hp = 0;
+function changeHP(damage) {
+  this.hp -= damage;
+  if (this.hp < 0) {
+    this.hp = 0;
   }
-  playerLife.style.width = player.hp + '%';
+}
+
+function elHP(player) {
+  const el = document.querySelector(`.player${player} .life`);
+  return el;
+}
+
+function renderHP() {
+  elHP(this.player).style.width = this.hp + '%';
 }
 
 function playerWin(name) {
@@ -84,8 +95,10 @@ function playerWin(name) {
 }
 
 randomButton.addEventListener('click', function () {
-  changeHP(player1);
-  changeHP(player2);
+  player1.changeHP(randomDamage(20));
+  player2.changeHP(randomDamage(20));
+  player1.renderHP();
+  player2.renderHP();
 
   if (player1.hp === 0 || player2.hp === 0) {
     randomButton.disabled = true;
@@ -97,5 +110,19 @@ randomButton.addEventListener('click', function () {
     } else if (player1.hp === player2.hp) {
       arenas.appendChild(playerWin(player2.name));
     }
+    arenas.appendChild(createReloadButton());
   }
 });
+
+function createReloadButton() {
+  const div = createElement('div', 'reloadWrap');
+  const button = createElement('button', 'button');
+  button.innerText = 'Restart';
+  div.appendChild(button);
+
+  button.addEventListener('click', function () {
+    window.location.reload();
+  });
+
+  return div;
+}
