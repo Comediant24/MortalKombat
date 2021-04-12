@@ -73,15 +73,13 @@ function changeHP(player) {
   playerLife.style.width = player.hp + '%';
 }
 
-function playerLose(name) {
-  const loseTitle = createElement('div', 'loseTitle');
-  loseTitle.innerText = `${name} lose`;
-  return loseTitle;
-}
-
 function playerWin(name) {
   const winTitle = createElement('div', 'loseTitle');
-  winTitle.innerText = `${name} win`;
+  if (name) {
+    winTitle.innerText = `${name} win`;
+  } else {
+    winTitle.innerText = 'Draw';
+  }
   return winTitle;
 }
 
@@ -92,8 +90,12 @@ randomButton.addEventListener('click', function () {
   if (player1.hp === 0 || player2.hp === 0) {
     randomButton.disabled = true;
     randomButton.style.backgroundColor = 'gray';
-    return player1.hp > player2.hp
-      ? arenas.appendChild(playerWin(player1.name))
-      : arenas.appendChild(playerWin(player2.name));
+    if (player1.hp > player2.hp) {
+      arenas.appendChild(playerWin(player1.name));
+    } else if (player1.hp < player2.hp) {
+      arenas.appendChild(playerWin(player2.name));
+    } else if (player1.hp === player2.hp) {
+      arenas.appendChild(playerWin(player2.name));
+    }
   }
 });
