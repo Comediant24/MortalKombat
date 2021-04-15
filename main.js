@@ -10,8 +10,9 @@ const player1 = {
   attack: function () {
     console.log(`${this.name} + fight`);
   },
-  changeHP: changeHP,
-  renderHP: renderHP,
+  elHP,
+  changeHP,
+  renderHP,
 };
 
 const player2 = {
@@ -23,8 +24,9 @@ const player2 = {
   attack: function () {
     console.log(`${this.name} + fight`);
   },
-  changeHP: changeHP,
-  renderHP: renderHP,
+  elHP,
+  changeHP,
+  renderHP,
 };
 
 function randomDamage(upperLimit) {
@@ -75,13 +77,12 @@ function changeHP(damage) {
   }
 }
 
-function elHP(player) {
-  const el = document.querySelector(`.player${player} .life`);
-  return el;
+function elHP() {
+  return document.querySelector(`.player${this.player} .life`);
 }
 
 function renderHP() {
-  elHP(this.player).style.width = this.hp + '%';
+  this.elHP().style.width = this.hp + '%';
 }
 
 function playerWin(name) {
@@ -103,6 +104,7 @@ randomButton.addEventListener('click', function () {
   if (player1.hp === 0 || player2.hp === 0) {
     randomButton.disabled = true;
     randomButton.style.backgroundColor = 'gray';
+    arenas.appendChild(createReloadButton());
     if (player1.hp > player2.hp) {
       arenas.appendChild(playerWin(player1.name));
     } else if (player1.hp < player2.hp) {
@@ -110,7 +112,6 @@ randomButton.addEventListener('click', function () {
     } else if (player1.hp === player2.hp) {
       arenas.appendChild(playerWin(player2.name));
     }
-    arenas.appendChild(createReloadButton());
   }
 });
 
