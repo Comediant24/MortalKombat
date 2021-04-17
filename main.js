@@ -130,15 +130,7 @@ function enemyAttack() {
   };
 }
 
-for (const iterator of formFight) {
-  console.dir(iterator);
-}
-formFight.disa;
-
-formFight.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const enemy = enemyAttack();
-
+function playerAttack() {
   const attack = {};
 
   for (let item of formFight) {
@@ -151,17 +143,10 @@ formFight.addEventListener('submit', function (e) {
     }
     item.checked = false;
   }
+  return attack;
+}
 
-  if (enemy.hit !== attack.defence) {
-    player1.changeHP(enemy.value);
-    player1.renderHP();
-  }
-
-  if (attack.hit !== enemy.defence) {
-    player2.changeHP(attack.value);
-    player2.renderHP();
-  }
-
+function showResult() {
   if (player1.hp === 0 || player2.hp === 0) {
     formFightButton.disabled = true;
     arenas.appendChild(createReloadButton());
@@ -174,4 +159,23 @@ formFight.addEventListener('submit', function (e) {
       arenas.appendChild(playerWin(player2.name));
     }
   }
+}
+
+function getHP(player, hitPlayer, defencePlayer) {
+  if (hitPlayer.hit !== defencePlayer.defence) {
+    player.changeHP(hitPlayer.value);
+    player.renderHP();
+  }
+}
+
+formFight.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const enemy = enemyAttack();
+  const player = playerAttack();
+
+  getHP(player1, enemy, player);
+  getHP(player2, player, enemy);
+
+  showResult();
 });
